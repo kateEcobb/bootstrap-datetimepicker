@@ -60,6 +60,7 @@
         var picker = {},
             date,
             viewDate,
+            stringTime,
             unset = true,
             input,
             component = false,
@@ -339,6 +340,7 @@
                     timeView = $('<div>').addClass('timepicker').append(getTimePickerTemplate()),
                     content = $('<ul>').addClass('list-unstyled'),
                     toolbar = $('<li>').addClass('picker-switch' + (options.collapse ? ' accordion-toggle' : '')).append(getToolbar());
+
 
                 if (options.inline) {
                     template.removeClass('dropdown-menu');
@@ -845,6 +847,7 @@
             setValue = function (targetMoment) {
                 var oldDate = unset ? null : date;
 
+
                 // case of calling setValue(null or false)
                 if (!targetMoment) {
                     unset = true;
@@ -871,6 +874,11 @@
                     input.val(date.format(actualFormat));
                     element.data('date', date.format(actualFormat));
                     unset = false;
+
+                    if (options.hiddenID) {
+                        $(options.hiddenID).val(date.clone().format('x'));
+                    }
+
                     update();
                     notifyEvent({
                         type: 'dp.change',
@@ -1424,6 +1432,11 @@
             element.removeData('date');
         };
 
+
+        picker.isOpen = function () {
+            return !!widget;
+        };
+
         picker.toggle = toggle;
 
         picker.show = show;
@@ -1503,6 +1516,7 @@
             setValue(newDate === null ? null : parseInputDate(newDate));
             return picker;
         };
+
 
         picker.format = function (newFormat) {
             ///<summary>test su</summary>
@@ -1692,6 +1706,16 @@
             return picker;
         };
 
+        picker.hiddenID = function (hiddenID) {
+            if (arguments.length === 0) {
+                return options.hiddenID;
+            }
+
+
+            options.hiddenID = hiddenID;
+            return picker;
+        };
+
         picker.minDate = function (minDate) {
             if (arguments.length === 0) {
                 return options.minDate ? options.minDate.clone() : options.minDate;
@@ -1719,7 +1743,7 @@
             }
             options.minDate = parsedDate;
             if (options.useCurrent && !options.keepInvalid && date.isBefore(minDate)) {
-                setValue(options.minDate);
+                viewDate = options.minDate;
             }
             if (viewDate.isBefore(parsedDate)) {
                 viewDate = parsedDate.clone().add(options.stepping, 'm');
@@ -1747,7 +1771,7 @@
 
             if (typeof defaultDate === 'string') {
                 if (defaultDate === 'now' || defaultDate === 'moment') {
-                    defaultDate = getMoment();
+                    defaultDate = moment();
                 }
             }
 
@@ -2088,8 +2112,9 @@
             return picker;
         };
 
-        picker.getMoment = function (d) {
-            return getMoment(d);
+        picker.getMoment = function () {
+            return moment();
+            // return getMoment(d);
         };
 
         picker.debug = function (debug) {
@@ -2323,7 +2348,7 @@
         }
 
         // Set defaults for date here now instead of in var declaration
-        date = getMoment();
+        date = moment();
         viewDate = date.clone();
 
         $.extend(true, options, dataToOptions());
@@ -2338,7 +2363,15 @@
             picker.disable();
         }
         if (input.is('input') && input.val().trim().length !== 0) {
-            setValue(parseInputDate(input.val().trim()));
+            stringTime = input.val().trim();
+            if (typeof stringTime === 'string') {
+                stringTime = ++stringTime;
+            }
+
+            if (!moment.isMoment(stringTime)) {
+                stringTime = moment(stringTime);
+            }
+            setValue(parseInputDate(stringTime));
         }
         else if (options.defaultDate && input.attr('placeholder') === undefined) {
             setValue(options.defaultDate);
@@ -2374,6 +2407,7 @@
         stepping: 1,
         minDate: false,
         maxDate: false,
+        hiddenID: false,
         useCurrent: true,
         collapse: true,
         locale: moment.locale(),
