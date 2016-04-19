@@ -876,7 +876,11 @@
                     unset = false;
 
                     if (options.hiddenID) {
-                        $(options.hiddenID).val(date.clone().format('x'));
+                      $(options.hiddenID).val(date.clone().format('YYYY-MM-DD HH:mm'));
+                    }
+
+                    if(options.hiddenUnixID) {
+                      $(options.hiddenUnixID).val(date.clone().format('X'));
                     }
 
                     update();
@@ -1716,6 +1720,16 @@
             return picker;
         };
 
+        picker.hiddenUnixID = function (hiddenUnixID) {
+            if (arguments.length === 0) {
+                return options.hiddenUnixID;
+            }
+
+
+            options.hiddenUnixID = hiddenUnixID;
+            return picker;
+        };
+
         picker.minDate = function (minDate) {
             if (arguments.length === 0) {
                 return options.minDate ? options.minDate.clone() : options.minDate;
@@ -2408,6 +2422,7 @@
         minDate: false,
         maxDate: false,
         hiddenID: false,
+        hiddenUnixID: false,
         useCurrent: true,
         collapse: true,
         locale: moment.locale(),
