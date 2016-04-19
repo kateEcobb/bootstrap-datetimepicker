@@ -876,11 +876,11 @@
                     unset = false;
 
                     if (options.hiddenID) {
-                      $(options.hiddenID).val(date.clone().format('YYYY-MM-DD HH:mm'));
+                        $(options.hiddenID).val(date.clone().format('YYYY-MM-DD HH:mm'));
                     }
 
-                    if(options.hiddenUnixID) {
-                      $(options.hiddenUnixID).val(date.clone().format('X'));
+                    if (options.hiddenUnixID) {
+                        $(options.hiddenUnixID).val(date.clone().format('X'));
                     }
 
                     update();
