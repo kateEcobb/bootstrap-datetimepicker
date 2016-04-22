@@ -862,7 +862,7 @@
                     return;
                 }
 
-                targetMoment = targetMoment.clone().locale(options.locale);
+                targetMoment = targetMoment.clone().tz(options.timeZone);
 
                 if (options.stepping !== 1) {
                     targetMoment.minutes((Math.round(targetMoment.minutes() / options.stepping) * options.stepping) % 60).seconds(0);
@@ -1254,7 +1254,7 @@
                 } else {
                     inputDate = options.parseInputDate(inputDate);
                 }
-                inputDate.locale(options.locale);
+
                 return inputDate;
             },
 
@@ -1815,8 +1815,8 @@
             }
 
             options.locale = locale;
-            date.locale(options.locale);
-            viewDate.locale(options.locale);
+            // date.locale(options.locale);
+            // viewDate.locale(options.locale);
 
             if (actualFormat) {
                 initFormatting(); // reinit formatting
@@ -1827,6 +1827,8 @@
             }
             return picker;
         };
+
+
 
         picker.stepping = function (stepping) {
             if (arguments.length === 0) {
@@ -2414,7 +2416,7 @@
     };
 
     $.fn.datetimepicker.defaults = {
-        timeZone: 'Etc/UTC',
+        timeZone: 'America/Los_Angeles',
         format: false,
         dayViewHeaderFormat: 'MMMM YYYY',
         extraFormats: false,
