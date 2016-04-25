@@ -862,7 +862,12 @@
                     return;
                 }
 
-                targetMoment = targetMoment.clone().tz(options.timeZone);
+
+                if (options.timeZone !== null) {
+                    targetMoment = targetMoment.clone().tz(options.timeZone);
+                } else {
+                    targetMoment = targetMoment.clone();
+                }
 
                 if (options.stepping !== 1) {
                     targetMoment.minutes((Math.round(targetMoment.minutes() / options.stepping) * options.stepping) % 60).seconds(0);
@@ -2416,7 +2421,7 @@
     };
 
     $.fn.datetimepicker.defaults = {
-        timeZone: 'America/Los_Angeles',
+        timeZone: null,
         format: false,
         dayViewHeaderFormat: 'MMMM YYYY',
         extraFormats: false,
